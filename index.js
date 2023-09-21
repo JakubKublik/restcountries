@@ -105,6 +105,22 @@ app.get('/c', async (req, res) => {
         res.status(500).json({ error: 'Wystąpił błąd podczas pobierania danych z bazy danych.' });
       }
     });
+
+    app.get('/continents', async (req, res) => {
+      try {
+        const connection = await mysql.createConnection(dbConfig);
+    
+        const [rows] = await connection.query('SELECT DISTINCT kontynent FROM kraje');
+    
+        connection.end();
+    
+        res.json(rows);
+      } catch (error) {
+        console.error('Błąd:', error);
+        res.status(500).json({ error: 'Wystąpił błąd podczas pobierania danych z bazy danych.' });
+      }
+    });
+    
     
     app.listen(port, () => {
       console.log(`Server działa na porcie ${port}`);

@@ -1,0 +1,1 @@
+//dodawaj checkboksy do każdego kontynentu jeżeli jeden kontynent zostanie usunięty checkboks z tym kontynętem też zostanie usunięty, jak kontynent zostanie dodany to dodany zostaje również checkboks
