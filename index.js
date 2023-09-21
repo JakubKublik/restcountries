@@ -58,70 +58,38 @@ app.get('/c', async (req, res) => {
   }
 });
 
+app.get('/co/:continent', async (req, res) => {
+  const continent = req.params.continent;
 
-   
+  try {
+    const connection = await mysql.createConnection(dbConfig);
 
-    
+    const [rows, fields] = await connection.query('SELECT * FROM kraje WHERE kontynent = ?', [continent]);
 
+    connection.end();
 
+    res.json(rows);
+  } catch (error) {
+    console.error('Błąd:', error);
+    res.status(500).json({ error: 'Wystąpił błąd podczas pobierania danych z bazy danych.' });
+  }
+});
 
-      
-  
-    app.get('/co/:region', async (req, res) => {
-      const region = req.params.region;
-    
-      try {
-        const connection = await mysql.createConnection(dbConfig);
-    
-        const [rows, fields] = await connection.query('SELECT * FROM kraje WHERE region = ?', [region]);
-    
-        connection.end();
-    
-        
-        res.json(rows);
-      } catch (error) {
-        console.error('Błąd:', error);
-        res.status(500).json({ error: 'Wystąpił błąd podczas pobierania danych z bazy danych.' });
-      }
-    });
+app.get('/continents', async (req, res) => {
+  try {
+    const connection = await mysql.createConnection(dbConfig);
 
+    const [rows] = await connection.query('SELECT DISTINCT kontynent FROM kraje');
 
+    connection.end();
 
+    res.json(rows);
+  } catch (error) {
+    console.error('Błąd:', error);
+    res.status(500).json({ error: 'Wystąpił błąd podczas pobierania danych z bazy danych.' });
+  }
+});
 
-
-    app.get('/cou/:minPopulation', async (req, res) => {
-      const { minPopulation } = req.query;
-    
-      try {
-        const connection = await mysql.createConnection(dbConfig);
-    
-        const [rows] = await connection.query('SELECT * FROM kraje WHERE populacja > ?', [minPopulation]);
-    
-        connection.end();
-    
-       res.json(rows);
-      } catch (error) {
-        console.error('Błąd:', error);
-        res.status(500).json({ error: 'Wystąpił błąd podczas pobierania danych z bazy danych.' });
-      }
-    });
-
-    app.get('/continents', async (req, res) => {
-      try {
-        const connection = await mysql.createConnection(dbConfig);
-    
-        const [rows] = await connection.query('SELECT DISTINCT kontynent FROM kraje');
-    
-        connection.end();
-    
-        res.json(rows);
-      } catch (error) {
-        console.error('Błąd:', error);
-        res.status(500).json({ error: 'Wystąpił błąd podczas pobierania danych z bazy danych.' });
-      }
-    });
-    
-    
-    app.listen(port, () => {
-      console.log(`Server działa na porcie ${port}`);
-    });
+app.listen(port, () => {
+  console.log(`Server działa na porcie ${port}`);
+});
